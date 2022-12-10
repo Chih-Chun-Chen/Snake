@@ -2,7 +2,6 @@ package com.example.snackoff;
 
 import android.os.Handler;
 import android.os.Message;
-
 import java.util.ArrayList;
 
 public class Timer extends Handler {

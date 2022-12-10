@@ -59,6 +59,7 @@ public class ComponentView extends View implements TickListener{
             s.setPoisition(randomX, randomY);
             s.draw(c);
         }
+        tick();
     }
 
     @Override
@@ -69,6 +70,6 @@ public class ComponentView extends View implements TickListener{
 
     @Override
     public void tick() {
-
+        invalidate();
     }
 }
