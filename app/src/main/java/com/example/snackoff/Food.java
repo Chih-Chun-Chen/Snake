@@ -9,8 +9,15 @@ public class Food extends Sprite{
         super(res, c);
     }
 
+    /**
+     * Draw method for Food itself
+     * @param c
+     */
     @Override
-    void draw(Canvas c) {
+    public void draw(Canvas c) {
         c.drawCircle(position.x, position.y, 10, paint);
     }
+
+    @Override
+    public void tick() {}
 }

@@ -3,17 +3,25 @@ package com.example.snackoff;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.view.MotionEvent;
 import android.view.View;
 
-public class ComponentView extends View {
+import java.util.ArrayList;
+
+public class ComponentView extends View implements TickListener{
 
     private boolean scale;
-    private Sprite snack1;
-    private Sprite food;
+    private Sprite snake1;
+    private Sprite snake2;
+    private ArrayList<Sprite> snakeList;
+    private Timer timer;
 
     public ComponentView(Context context) {
         super(context);
+        timer = Timer.getTimer();
         scale = true;
+        snakeList = new ArrayList<>();
+
     }
 
     @Override
@@ -21,9 +29,15 @@ public class ComponentView extends View {
 
         if (scale) {
 
-            snack1 = new Snack(getResources(), Color.rgb(164, 66, 245));
+            snake1 = new Snack(getResources(), Color.rgb(164, 66, 245));
+            timer.register(snake1);
 
-            food = new Food(getResources(), Color.rgb(66, 117, 245));
+            snake2 = new Snack(getResources(), Sprite.chooseRandomColor());
+            timer.register(snake2);
+
+            for (int i = 0; i < 50; i++) {
+                snakeList.add(new Food(getResources(), Sprite.chooseRandomColor()));
+            }
 
             scale = false;
         }
@@ -32,11 +46,29 @@ public class ComponentView extends View {
         c.drawColor(Color.rgb(52, 235, 128));
 
         //Snack Object
-        snack1.setPoisition(500, 500);
-        snack1.draw(c);
+        snake1.setPoisition(500, 500);
+        snake1.draw(c);
 
-        //Food Object
-        food.setPoisition(700, 700);
-        food.draw(c);
+        snake2.setPoisition(900, 600);
+        snake2.draw(c);
+
+        //50 Food Object
+        for (Sprite s : snakeList) {
+            int randomX = (int) (Math.random() * c.getWidth());
+            int randomY = (int) (Math.random() * c.getHeight());
+            s.setPoisition(randomX, randomY);
+            s.draw(c);
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent m) {
+
+        return true;
+    }
+
+    @Override
+    public void tick() {
+
     }
 }
