@@ -6,16 +6,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
 
 abstract class Sprite implements TickListener{
 
     public Bitmap image;
     Point position;
     Paint paint;
+    RectF spriteBound;
 
 
     public Sprite(Resources res, int c) {
         position = new Point();
+        spriteBound = new RectF();
         paint = new Paint();
         paint.setColor(c);
     }
@@ -27,9 +30,8 @@ abstract class Sprite implements TickListener{
      * @param x coordinate
      * @param y coordinate
      */
-    public void setPoisition(int x, int y) {
-        position.x = x;
-        position.y = y;
+    public void setPoisition(float x, float y) {
+        spriteBound.offsetTo(x, y);
     }
 
     /**

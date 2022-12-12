@@ -5,8 +5,11 @@ import android.graphics.Canvas;
 
 public class Food extends Sprite{
 
+    private final int FOODSIZE = 10;
+
     Food (Resources res, int c) {
         super(res, c);
+        spriteBound.set(0, 0, FOODSIZE, FOODSIZE);
     }
 
     /**
@@ -15,7 +18,7 @@ public class Food extends Sprite{
      */
     @Override
     public void draw(Canvas c) {
-        c.drawCircle(position.x, position.y, 10, paint);
+        c.drawCircle(spriteBound.left, spriteBound.top, FOODSIZE, paint);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.example.snackoff;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,6 +15,7 @@ public class ComponentView extends View implements TickListener{
     private Sprite snake1;
     private Sprite snake2;
     private ArrayList<Sprite> snakeList;
+    private ArrayList<Sprite> foodList;
     private Timer timer;
 
     public ComponentView(Context context) {
@@ -21,6 +23,7 @@ public class ComponentView extends View implements TickListener{
         timer = Timer.getTimer();
         scale = true;
         snakeList = new ArrayList<>();
+        foodList = new ArrayList<>();
 
     }
 
@@ -39,6 +42,14 @@ public class ComponentView extends View implements TickListener{
                 snakeList.add(new Food(getResources(), Sprite.chooseRandomColor()));
             }
 
+            //50 Food Object
+            for (Sprite s : snakeList) {
+                int randomX = (int) (Math.random() * c.getWidth());
+                int randomY = (int) (Math.random() * c.getHeight());
+                s.setPoisition(randomX, randomY);
+                foodList.add(s);
+            }
+
             scale = false;
         }
 
@@ -52,12 +63,9 @@ public class ComponentView extends View implements TickListener{
         snake2.setPoisition(900, 600);
         snake2.draw(c);
 
-        //50 Food Object
-        for (Sprite s : snakeList) {
-            int randomX = (int) (Math.random() * c.getWidth());
-            int randomY = (int) (Math.random() * c.getHeight());
-            s.setPoisition(randomX, randomY);
-            s.draw(c);
+        //To draw 50 Food Object
+        for (Sprite f : foodList) {
+            f.draw(c);
         }
         tick();
     }

@@ -31,6 +31,8 @@ public class Snack extends Sprite implements TickListener{
 
         blackEyesColor = new Paint();
         blackEyesColor.setColor(Color.BLACK);
+
+        spriteBound.set(0, 0, bodySize, bodySize);
     }
 
     /**
@@ -40,26 +42,33 @@ public class Snack extends Sprite implements TickListener{
     @Override
     public void draw(Canvas c) {
         //Head
-        c.drawCircle(position.x, position.y, 18, paint);
-        c.drawCircle(position.x, position.y - 8, 8, whiteEyesColor);
-        c.drawCircle(position.x, position.y + 8, 8, whiteEyesColor);
-        c.drawCircle(position.x, position.y - 8, 5, blackEyesColor);
-        c.drawCircle(position.x, position.y + 8, 5, blackEyesColor);
+        c.drawCircle(spriteBound.left, spriteBound.top, 18, paint);
+        c.drawCircle(spriteBound.left, spriteBound.top - 8, 8, whiteEyesColor);
+        c.drawCircle(spriteBound.left, spriteBound.top + 8, 8, whiteEyesColor);
+        c.drawCircle(spriteBound.left, spriteBound.top - 8, 5, blackEyesColor);
+        c.drawCircle(spriteBound.left, spriteBound.top + 8, 5, blackEyesColor);
 
         for (int i = 0; i < body; i++) {
             //Body
-            position.x += 27;
-            c.drawCircle(position.x, position.y, bodySize, paint);
-            c.drawCircle(position.x, position.y, bodySize - 2, innerPaint);
+            spriteBound.left += 27;
+            c.drawCircle(spriteBound.left, spriteBound.top, bodySize, paint);
+            c.drawCircle(spriteBound.left, spriteBound.top, bodySize - 2, innerPaint);
         }
+
+
+
+        Paint paint= new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(2);
+        paint.setColor(Color.RED);
+        c.drawRoundRect(spriteBound,0, 0 , paint);
     }
 
     /**
      * To make the Sprite to move
      */
     public void move() {
-        position.x += 1;
-        position.y += 1;
+        spriteBound.offset(1, 1);
     }
 
     /**
