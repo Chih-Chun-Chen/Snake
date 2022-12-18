@@ -16,6 +16,7 @@ public class Snack extends Sprite implements TickListener{
     private int body;
     private int bodySize;
     private int bodyBound;
+    private final int lensOfBody = 30;
 
     public Snack(Resources res, int c) {
         super(res, c);
@@ -56,11 +57,11 @@ public class Snack extends Sprite implements TickListener{
         c.drawCircle(spriteBound.left + bodySize, spriteBound.top + bodySize - 8, 5, blackEyesColor);
         c.drawCircle(spriteBound.left + bodySize, spriteBound.top + bodySize + 8, 5, blackEyesColor);
 
-        bodyBound = 30;
+        bodyBound = lensOfBody;
         for (int i = 0; i < body; i++) {
             //Body
             c.drawCircle(spriteBound.left + bodySize + bodyBound, spriteBound.top + bodySize, bodySize, paint);
-            bodyBound += 30;
+            bodyBound += lensOfBody;
         }
     }
 
@@ -74,11 +75,13 @@ public class Snack extends Sprite implements TickListener{
 
     /**
      * To check if Sprite Object contains Food Object's spriteBound
+     * To adjust the lengths of body and spriteBound of Snake Object
      * @return true
      */
     public boolean eat(Sprite other) {
-        if (RectF.intersects(this.spriteBound, other.spriteBound)) {
+        if (this.spriteBound.intersects(this.spriteBound, other.spriteBound)) {
             this.body += 1;
+            this.spriteBound.right += lensOfBody;
         }
         return RectF.intersects(this.spriteBound, other.spriteBound);
     }

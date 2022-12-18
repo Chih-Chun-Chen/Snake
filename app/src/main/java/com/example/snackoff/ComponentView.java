@@ -17,7 +17,10 @@ public class ComponentView extends View implements TickListener{
     private ArrayList<Snack> snakeList;
     private ArrayList<Sprite> foodCreationList;
     private ArrayList<Sprite> foodList;
+    private ArrayList<Sprite> foodRemoveList;
     private Timer timer;
+    private GameController controller;
+    private int numOfFood;
 
     public ComponentView(Context context) {
         super(context);
@@ -26,11 +29,35 @@ public class ComponentView extends View implements TickListener{
         snakeList = new ArrayList<>();
         foodCreationList = new ArrayList<>();
         foodList = new ArrayList<>();
+        foodRemoveList = new ArrayList<>();
+        controller = new GameController();
+        numOfFood = 0;
 
+    }
+
+    /**
+     * Game Controller inner class
+     */
+    protected class GameController {
+
+        private Paint p;
+
+        GameController() {
+            p = new Paint();
+            p.setStrokeWidth(10);
+            p.setStyle(Paint.Style.STROKE);
+            p.setColor(Color.GRAY);
+        }
+
+        public void makeController(Canvas c, float controllerX, float controllerY, float radius, Paint p) {
+            c.drawCircle(controllerX, controllerY, radius, p);
+        }
     }
 
     @Override
     public void onDraw (Canvas c) {
+        //Width: 2040
+        //Height: 880
 
         if (scale) {
 
@@ -44,16 +71,16 @@ public class ComponentView extends View implements TickListener{
             snakeList.add(snake2);
             timer.register(snake2);
 
-            for (int i = 0; i < 50; i++) {
-                foodCreationList.add(new Food(getResources(), Sprite.chooseRandomColor()));
-            }
-
             //50 Food Object
-            for (Sprite s : foodCreationList) {
+            while (numOfFood != 50) {
                 int randomX = (int) (Math.random() * c.getWidth());
                 int randomY = (int) (Math.random() * c.getHeight());
-                s.setPoisition(randomX, randomY);
-                foodList.add(s);
+                if (!(randomX > snake1.spriteBound.left && randomX < snake1.spriteBound.right && randomY > snake1.spriteBound.top && randomY < snake1.spriteBound.bottom)) {
+                        Sprite food = new Food(getResources(), Sprite.chooseRandomColor());
+                        food.setPoisition(randomX, randomY);
+                        foodList.add(food);
+                        numOfFood++;
+                }
             }
 
             scale = false;
@@ -61,6 +88,9 @@ public class ComponentView extends View implements TickListener{
 
         //Background Color
         c.drawColor(Color.rgb(52, 235, 128));
+
+        //To create the game controller
+        controller.makeController(c, c.getWidth() * 0.098039f, c.getHeight() * 0.85227f, 80, controller.p);
 
         //To draw Snack Object
         snake1.draw(c);
@@ -75,12 +105,33 @@ public class ComponentView extends View implements TickListener{
             f.visualizeRectF(c);
         }
 
+        //To remove Food Object after intersecting with Snake Object
+        for (Sprite f : foodRemoveList) {
+            foodCreationList.remove(f);
+            foodList.remove(f);
+            timer.deregister(f);
+        }
+
         tick();
     }
 
     @Override
     public void tick() {
+        detectCollisions();
         invalidate();
+    }
+
+    /**
+     * To detect the intersection between the Snake Object and Food Object
+     */
+    public void detectCollisions() {
+        for (Snack s : snakeList) {
+            for (Sprite f : foodList) {
+                if (s.eat(f)) {
+                    foodRemoveList.add(f);
+                }
+            }
+        }
     }
 
     @Override
@@ -88,6 +139,4 @@ public class ComponentView extends View implements TickListener{
 
         return true;
     }
-
-
 }
