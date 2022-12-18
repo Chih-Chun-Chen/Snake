@@ -5,26 +5,25 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 public class Snack extends Sprite implements TickListener{
 
-
-    private Paint innerPaint;
     private Paint whiteEyesColor;
     private Paint blackEyesColor;
     private PointF velocity;
     private int image;
     private int body;
     private int bodySize;
+    private int bodyBound;
 
     public Snack(Resources res, int c) {
         super(res, c);
         body = 5;
         bodySize = 15;
-        velocity = new PointF();
 
-        innerPaint = new Paint();
-        innerPaint.setColor(c - 1000000);
+        velocity = new PointF();
+        velocity.x = -10;
 
         whiteEyesColor = new Paint();
         whiteEyesColor.setColor(Color.WHITE);
@@ -32,43 +31,7 @@ public class Snack extends Sprite implements TickListener{
         blackEyesColor = new Paint();
         blackEyesColor.setColor(Color.BLACK);
 
-        spriteBound.set(0, 0, bodySize, bodySize);
-    }
-
-    /**
-     * Draw method for Snake's head, eyes, and body
-     * @param c
-     */
-    @Override
-    public void draw(Canvas c) {
-        //Head
-        c.drawCircle(spriteBound.left, spriteBound.top, 18, paint);
-        c.drawCircle(spriteBound.left, spriteBound.top - 8, 8, whiteEyesColor);
-        c.drawCircle(spriteBound.left, spriteBound.top + 8, 8, whiteEyesColor);
-        c.drawCircle(spriteBound.left, spriteBound.top - 8, 5, blackEyesColor);
-        c.drawCircle(spriteBound.left, spriteBound.top + 8, 5, blackEyesColor);
-
-        for (int i = 0; i < body; i++) {
-            //Body
-            spriteBound.left += 27;
-            c.drawCircle(spriteBound.left, spriteBound.top, bodySize, paint);
-            c.drawCircle(spriteBound.left, spriteBound.top, bodySize - 2, innerPaint);
-        }
-
-
-
-        Paint paint= new Paint();
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
-        paint.setColor(Color.RED);
-        c.drawRoundRect(spriteBound,0, 0 , paint);
-    }
-
-    /**
-     * To make the Sprite to move
-     */
-    public void move() {
-        spriteBound.offset(1, 1);
+        spriteBound.set(0, 0, 30 + bodySize * 2 * body, bodySize * 2);
     }
 
     /**
@@ -79,4 +42,45 @@ public class Snack extends Sprite implements TickListener{
     public void tick() {
         this.move();
     }
+
+    /**
+     * Draw method for Snake's head, eyes, and body
+     * @param c
+     */
+    @Override
+    public void draw(Canvas c) {
+        //Head
+        c.drawCircle(spriteBound.left + bodySize, spriteBound.top + bodySize, 18, paint);
+        c.drawCircle(spriteBound.left + bodySize, spriteBound.top + bodySize - 8, 8, whiteEyesColor);
+        c.drawCircle(spriteBound.left + bodySize, spriteBound.top + bodySize + 8, 8, whiteEyesColor);
+        c.drawCircle(spriteBound.left + bodySize, spriteBound.top + bodySize - 8, 5, blackEyesColor);
+        c.drawCircle(spriteBound.left + bodySize, spriteBound.top + bodySize + 8, 5, blackEyesColor);
+
+        bodyBound = 30;
+        for (int i = 0; i < body; i++) {
+            //Body
+            c.drawCircle(spriteBound.left + bodySize + bodyBound, spriteBound.top + bodySize, bodySize, paint);
+            bodyBound += 30;
+        }
+    }
+
+    /**
+     * To make the Sprite to move
+     */
+    public void move() {
+        spriteBound.offset(velocity.x, 0);
+        System.out.println(spriteBound.left);
+    }
+
+    /**
+     * To check if Sprite Object contains Food Object's spriteBound
+     * @return true
+     */
+    public boolean eat(Sprite other) {
+        if (RectF.intersects(this.spriteBound, other.spriteBound)) {
+            this.body += 1;
+        }
+        return RectF.intersects(this.spriteBound, other.spriteBound);
+    }
+
 }

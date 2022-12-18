@@ -9,7 +9,7 @@ public class Food extends Sprite{
 
     Food (Resources res, int c) {
         super(res, c);
-        spriteBound.set(0, 0, FOODSIZE, FOODSIZE);
+        spriteBound.set(0, 0, FOODSIZE * 2, FOODSIZE * 2);
     }
 
     /**
@@ -18,7 +18,7 @@ public class Food extends Sprite{
      */
     @Override
     public void draw(Canvas c) {
-        c.drawCircle(spriteBound.left, spriteBound.top, FOODSIZE, paint);
+        c.drawCircle(spriteBound.left + FOODSIZE, spriteBound.top + FOODSIZE, FOODSIZE, paint);
     }
 
     @Override

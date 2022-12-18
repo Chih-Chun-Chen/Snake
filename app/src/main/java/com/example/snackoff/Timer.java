@@ -22,7 +22,7 @@ public class Timer extends Handler {
     public void handleMessage(Message m){
 
         notifyObserver();
-        sendMessageDelayed(obtainMessage(), 33);
+        sendMessageDelayed(obtainMessage(), 10);
     }
 
     /**

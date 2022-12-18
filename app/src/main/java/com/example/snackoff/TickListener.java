@@ -1,5 +1,9 @@
 package com.example.snackoff;
 
 public interface TickListener {
-    public abstract void tick();
+
+    /**
+     * Tick method for Sprite Object
+     */
+    void tick();
 }

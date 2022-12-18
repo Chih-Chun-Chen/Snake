@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.view.View;
 
 abstract class Sprite implements TickListener{
 
@@ -23,6 +24,11 @@ abstract class Sprite implements TickListener{
         paint.setColor(c);
     }
 
+    /**
+     * abstract method
+     * To draw the Sprite
+     * @param c
+     */
     public abstract void draw(Canvas c);
 
     /**
@@ -66,5 +72,12 @@ abstract class Sprite implements TickListener{
                 break;
         }
         return color;
+    }
+
+    public void visualizeRectF(Canvas c) {
+        Paint p = new Paint();
+        p.setColor(Color.RED);
+        p.setStyle(Paint.Style.STROKE);
+        c.drawRect(spriteBound, p);
     }
 }
