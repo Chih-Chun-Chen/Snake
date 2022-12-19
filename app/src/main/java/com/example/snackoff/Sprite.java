@@ -36,7 +36,7 @@ abstract class Sprite implements TickListener{
      * @param x coordinate
      * @param y coordinate
      */
-    public void setPoisition(float x, float y) {
+    public void setPosition(float x, float y) {
         spriteBound.offsetTo(x, y);
     }
 
