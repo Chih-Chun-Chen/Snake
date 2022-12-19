@@ -23,6 +23,7 @@ public class ComponentView extends View implements TickListener{
     private DirectionController outerController;
     private DirectionController innerController;
     private int numOfFood;
+    private boolean resetButton;
 
     public ComponentView(Context context) {
         super(context);
@@ -32,9 +33,10 @@ public class ComponentView extends View implements TickListener{
         foodCreationList = new ArrayList<>();
         foodList = new ArrayList<>();
         foodRemoveList = new ArrayList<>();
-        outerController = new DirectionController(80);
+        outerController = new DirectionController(100);
         innerController = new DirectionController(40, Color.BLUE);
         numOfFood = 0;
+        resetButton = true;
 
     }
 
@@ -55,7 +57,7 @@ public class ComponentView extends View implements TickListener{
             paint.setStrokeWidth(10);
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(Color.GRAY);
-            controllerBound.set(0, 0, radius, radius);
+            controllerBound.set(0, 0, radius * 2, radius * 2);
         }
 
         /**
@@ -68,12 +70,12 @@ public class ComponentView extends View implements TickListener{
             radius = r;
             paint = new Paint();
             paint.setColor(c);
-            controllerBound.set(0, 0, radius, radius);
+            controllerBound.set(0, 0, radius * 2, radius * 2);
         }
 
         @Override
         void makeController(Canvas c, Paint p) {
-            c.drawCircle(controllerBound.left, controllerBound.top, radius, p);
+            c.drawCircle(controllerBound.left + radius, controllerBound.top + radius, radius, p);
         }
     }
 
@@ -114,9 +116,14 @@ public class ComponentView extends View implements TickListener{
 
         //To create the game controller
         outerController.makeController(c, outerController.paint);
-        outerController.setPosition(c.getWidth() * 0.098039f, c.getHeight() * 0.85227f);
+        outerController.setPosition(c.getWidth() * 0.063725f, c.getHeight() * 0.738636f);
+        outerController.visualizeRectF(c);
         innerController.makeController(c, innerController.paint);
-        innerController.setPosition(c.getWidth() * 0.098039f, c.getHeight() * 0.85227f);
+        if (resetButton) {
+            innerController.setPosition(c.getWidth() * 0.063725f + outerController.radius - innerController.radius, c.getHeight() * 0.738636f + outerController.radius - innerController.radius);
+            resetButton = false;
+        }
+        innerController.visualizeRectF(c);
 
         //To draw Snack Object
         snake1.draw(c);
@@ -162,6 +169,13 @@ public class ComponentView extends View implements TickListener{
 
     @Override
     public boolean onTouchEvent(MotionEvent m) {
+
+        if (m.getX() > outerController.controllerBound.left && m.getY() > outerController.controllerBound.top && m.getX() < outerController.controllerBound.right && m.getY() < outerController.controllerBound.bottom && m.getAction() == 2) {
+            innerController.controllerBound.offsetTo(m.getX() - innerController.radius, m.getY() - innerController.radius);
+        } else {
+            resetButton = true;
+        }
+
 
         return true;
     }

@@ -70,7 +70,6 @@ public class Snack extends Sprite implements TickListener{
      */
     public void move() {
         spriteBound.offset(velocity.x, 0);
-        System.out.println(spriteBound.left);
     }
 
     /**
